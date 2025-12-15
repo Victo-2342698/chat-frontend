@@ -4,8 +4,7 @@ import { LanguageContext } from '../../contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-  const { login, isLoggedIn, restoreLogin, pageRedirectAfterLogin } =
-    useContext(AuthContext);
+  const { login, isLoggedIn, pageRedirectAfterLogin } = useContext(AuthContext);
 
   const { messages } = useContext(LanguageContext);
 
@@ -16,24 +15,15 @@ export default function Login() {
   const navigate = useNavigate();
 
   async function submit() {
-    login(email, password)
-      .then((ok) => {
-        if (!ok) {
-          setErreur('Identifiants invalides');
-        } else {
-          setErreur('');
-        }
-      })
-      .catch(() => setErreur('Erreur serveur'));
+    login(email, password).then((ok) => {
+      if (!ok) setErreur('Identifiants invalides');
+      else setErreur('');
+    });
   }
 
   useEffect(() => {
-    restoreLogin();
-  }, []);
-
-  useEffect(() => {
     if (isLoggedIn) navigate(pageRedirectAfterLogin);
-  }, [isLoggedIn]);
+  }, [isLoggedIn, navigate, pageRedirectAfterLogin]);
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">

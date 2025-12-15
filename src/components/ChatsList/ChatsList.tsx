@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import { ChatContext } from '../../contexts/ChatContext';
 import { useNavigate } from 'react-router-dom';
-import ChatFilters from '../../ChatFilters/ChatFilters';
+import ChatFilters from '../ChatFilters/ChatFilters';
 
 export default function ChatsList() {
   const { chats, refreshChats } = useContext(ChatContext);
