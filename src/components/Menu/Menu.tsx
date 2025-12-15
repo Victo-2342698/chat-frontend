@@ -9,8 +9,10 @@ export default function Menu() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoggedIn) navigate('/login');
-  }, [isLoggedIn]);
+    if (!isLoggedIn) {
+      navigate('/login');
+    }
+  }, [isLoggedIn, navigate]);
 
   return (
     <>
@@ -21,7 +23,7 @@ export default function Menu() {
           </Link>
 
           <Link to="/ajout" className="hover:text-gray-300">
-            Ajouter un chat
+            {messages['menu.add'] ?? 'Ajouter un chat'}
           </Link>
         </div>
 
@@ -51,7 +53,7 @@ export default function Menu() {
           </div>
 
           <button className="hover:text-gray-300" onClick={logout}>
-            Se déconnecter
+            {messages['menu.logout'] ?? 'Se déconnecter'}
           </button>
         </div>
       </nav>

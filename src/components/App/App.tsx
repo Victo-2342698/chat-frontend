@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import AuthProvider from '../../contexts/AuthContext';
 import ChatProvider from '../../contexts/ChatContext';
@@ -17,6 +17,10 @@ export default function App() {
       <ChatProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
+
+            <Route path="/login" element={<Login />} />
+
             <Route path="/" element={<Menu />}>
               <Route index element={<ChatsList />} />
               <Route path="ajout" element={<ChatAdd />} />
@@ -25,7 +29,7 @@ export default function App() {
               <Route path="delete/:chatid" element={<ChatDelete />} />
             </Route>
 
-            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </BrowserRouter>
       </ChatProvider>

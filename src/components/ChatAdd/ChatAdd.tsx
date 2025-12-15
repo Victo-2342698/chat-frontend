@@ -20,13 +20,6 @@ type FormData = {
   compatChiens: number;
   compatChats: number;
 
-  micropuce: boolean;
-  sterilise: boolean;
-  degraffe: boolean;
-  vermifuge: boolean;
-  vaccinsBase: boolean;
-  disponible: boolean;
-
   coutTotal: string;
   coutSterilisation: string;
   coutVaccin: string;
@@ -37,7 +30,7 @@ type FormData = {
   photoUrl: string;
 };
 
-const cleanNumber = (v: string) =>
+const cleanNumber = (v: string): number =>
   Number(v.replace(',', '.').replace(/[^0-9.]/g, ''));
 
 export default function ChatAdd() {
@@ -64,13 +57,6 @@ export default function ChatAdd() {
     compatChiens: 1,
     compatChats: 1,
 
-    micropuce: false,
-    sterilise: false,
-    degraffe: false,
-    vermifuge: false,
-    vaccinsBase: false,
-    disponible: true,
-
     coutTotal: '',
     coutSterilisation: '',
     coutVaccin: '',
@@ -81,22 +67,27 @@ export default function ChatAdd() {
     photoUrl: '',
   });
 
-  if (!isLoggedIn) navigate('/login');
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/login');
+    }
+  }, [isLoggedIn, navigate]);
 
   useEffect(() => {
     refreshChats();
     const max = chats.length
       ? Math.max(...chats.map((c) => c.numeroDossier))
       : 1000;
+
     setFormData((p) => ({ ...p, numeroDossier: max + 1 }));
     setLoading(false);
   }, []);
 
-  function update<K extends keyof FormData>(k: K, v: FormData[K]) {
-    setFormData((p) => ({ ...p, [k]: v }));
+  function update<K extends keyof FormData>(key: K, value: FormData[K]) {
+    setFormData((p) => ({ ...p, [key]: value }));
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrorMsg('');
 
@@ -116,11 +107,11 @@ export default function ChatAdd() {
       'coutMicropuce',
     ];
 
-    for (const f of required) {
-      if (!formData[f]) {
+    for (const field of required) {
+      if (!formData[field]) {
         setErrorMsg(
           `${messages['error.required'] ?? 'Champ requis'} : ${
-            messages[`field.${f}`] ?? f
+            messages[`field.${field}`] ?? field
           }`,
         );
         return;
@@ -162,11 +153,13 @@ export default function ChatAdd() {
     navigate('/');
   }
 
-  if (loading) return <p className="text-center mt-10">Loading…</p>;
+  if (loading) {
+    return <p className="text-center mt-10">Loading…</p>;
+  }
 
   return (
-    <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl p-8 mt-10">
-      <h2 className="text-3xl font-bold text-center mb-6">
+    <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-xl p-10 mt-10">
+      <h2 className="text-3xl font-bold text-center mb-8">
         {messages['menu.add']}
       </h2>
 
@@ -177,146 +170,140 @@ export default function ChatAdd() {
       )}
 
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
-        <L label={messages['field.name']}>
-          <I v={formData.nom} f="nom" u={update} />
-        </L>
+        <Field label={messages['field.name']}>
+          <Input value={formData.nom} onChange={(v) => update('nom', v)} />
+        </Field>
 
-        <L label={messages['field.race']}>
-          <I v={formData.race} f="race" u={update} />
-        </L>
+        <Field label={messages['field.race']}>
+          <Input value={formData.race} onChange={(v) => update('race', v)} />
+        </Field>
 
-        <L label={messages['field.sex']}>
+        <Field label={messages['field.sex']}>
           <select
             className="input"
             value={formData.sexe}
             onChange={(e) => update('sexe', e.target.value)}
           >
-            <option value="">{messages['common.choose'] ?? 'Choisir'}</option>
-            <option value="Femelle">
-              {messages['common.female'] ?? 'Femelle'}
-            </option>
-            <option value="Mâle">{messages['common.male'] ?? 'Mâle'}</option>
+            <option value="">{messages['common.choose']}</option>
+            <option value="Femelle">{messages['common.female']}</option>
+            <option value="Mâle">{messages['common.male']}</option>
           </select>
-        </L>
+        </Field>
 
-        <L label={messages['field.weight']}>
-          <I v={formData.poids} f="poids" u={update} />
-        </L>
+        <Field label={messages['field.weight']}>
+          <Input value={formData.poids} onChange={(v) => update('poids', v)} />
+        </Field>
 
-        <L label={messages['field.fileNumber']}>
+        <Field label={messages['field.fileNumber']}>
           <input
             className="input bg-gray-100"
             value={formData.numeroDossier}
             readOnly
           />
-        </L>
+        </Field>
 
-        <L label={messages['field.birthDate']}>
+        <Field label={messages['field.birthDate']}>
           <input
             type="date"
             className="input"
             value={formData.dateNaissance}
             onChange={(e) => update('dateNaissance', e.target.value)}
           />
-        </L>
+        </Field>
 
-        <L label={messages['field.adoptionDate']}>
+        <Field label={messages['field.adoptionDate']}>
           <input
             type="date"
             className="input"
             value={formData.dateMiseAdoption}
             onChange={(e) => update('dateMiseAdoption', e.target.value)}
           />
-        </L>
+        </Field>
 
-        <L label={`${messages['field.energy']} (1–5)`}>
-          <input
-            type="number"
-            min={1}
-            max={5}
-            className="input"
+        <Field label={messages['field.energy'] + ' (1–5)'}>
+          <NumberInput
             value={formData.tauxEnergie}
-            onChange={(e) => update('tauxEnergie', Number(e.target.value))}
+            onChange={(v) => update('tauxEnergie', v)}
           />
-        </L>
+        </Field>
 
-        <L label={`${messages['field.humanSocial']} (1–5)`}>
-          <input
-            type="number"
-            min={1}
-            max={5}
-            className="input"
+        <Field label={messages['field.humanSocial'] + ' (1–5)'}>
+          <NumberInput
             value={formData.sociabiliteHumain}
-            onChange={(e) =>
-              update('sociabiliteHumain', Number(e.target.value))
-            }
+            onChange={(v) => update('sociabiliteHumain', v)}
           />
-        </L>
+        </Field>
 
-        <L label={`${messages['field.childCompat']} (1–5)`}>
-          <input
-            type="number"
-            min={1}
-            max={5}
-            className="input"
+        <Field label={messages['field.childCompat'] + ' (1–5)'}>
+          <NumberInput
             value={formData.compatEnfants}
-            onChange={(e) => update('compatEnfants', Number(e.target.value))}
+            onChange={(v) => update('compatEnfants', v)}
           />
-        </L>
+        </Field>
 
-        <L label={`${messages['field.dogCompat']} (1–5)`}>
-          <input
-            type="number"
-            min={1}
-            max={5}
-            className="input"
+        <Field label={messages['field.dogCompat'] + ' (1–5)'}>
+          <NumberInput
             value={formData.compatChiens}
-            onChange={(e) => update('compatChiens', Number(e.target.value))}
+            onChange={(v) => update('compatChiens', v)}
           />
-        </L>
+        </Field>
 
-        <L label={`${messages['field.catCompat']} (1–5)`}>
-          <input
-            type="number"
-            min={1}
-            max={5}
-            className="input"
+        <Field label={messages['field.catCompat'] + ' (1–5)'}>
+          <NumberInput
             value={formData.compatChats}
-            onChange={(e) => update('compatChats', Number(e.target.value))}
+            onChange={(v) => update('compatChats', v)}
           />
-        </L>
+        </Field>
 
-        <L label={messages['field.description']}>
+        <Field label={messages['field.description']}>
           <textarea
-            className="input min-h-[90px]"
+            className="input min-h-[100px]"
             value={formData.description}
             onChange={(e) => update('description', e.target.value)}
           />
-        </L>
+        </Field>
 
-        <L label="Photo URL">
-          <I v={formData.photoUrl} f="photoUrl" u={update} />
-        </L>
+        <Field label={messages['field.photo']}>
+          <Input
+            value={formData.photoUrl}
+            onChange={(v) => update('photoUrl', v)}
+          />
+        </Field>
 
-        <L label={messages['field.totalCost']}>
-          <I v={formData.coutTotal} f="coutTotal" u={update} />
-        </L>
+        <Field label={messages['field.totalCost']}>
+          <Input
+            value={formData.coutTotal}
+            onChange={(v) => update('coutTotal', v)}
+          />
+        </Field>
 
-        <L label={messages['field.neuteringCost']}>
-          <I v={formData.coutSterilisation} f="coutSterilisation" u={update} />
-        </L>
+        <Field label={messages['field.neuteringCost']}>
+          <Input
+            value={formData.coutSterilisation}
+            onChange={(v) => update('coutSterilisation', v)}
+          />
+        </Field>
 
-        <L label={messages['field.vaccineCost']}>
-          <I v={formData.coutVaccin} f="coutVaccin" u={update} />
-        </L>
+        <Field label={messages['field.vaccineCost']}>
+          <Input
+            value={formData.coutVaccin}
+            onChange={(v) => update('coutVaccin', v)}
+          />
+        </Field>
 
-        <L label={messages['field.dewormingCost']}>
-          <I v={formData.coutVermifuge} f="coutVermifuge" u={update} />
-        </L>
+        <Field label={messages['field.dewormingCost']}>
+          <Input
+            value={formData.coutVermifuge}
+            onChange={(v) => update('coutVermifuge', v)}
+          />
+        </Field>
 
-        <L label={messages['field.microchipCost']}>
-          <I v={formData.coutMicropuce} f="coutMicropuce" u={update} />
-        </L>
+        <Field label={messages['field.microchipCost']}>
+          <Input
+            value={formData.coutMicropuce}
+            onChange={(v) => update('coutMicropuce', v)}
+          />
+        </Field>
 
         <button
           type="submit"
@@ -329,7 +316,13 @@ export default function ChatAdd() {
   );
 }
 
-function L({ label, children }: any) {
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex flex-col">
       <label className="font-semibold mb-1">{label}</label>
@@ -338,8 +331,37 @@ function L({ label, children }: any) {
   );
 }
 
-function I({ v, f, u }: any) {
+function Input({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
   return (
-    <input className="input" value={v} onChange={(e) => u(f, e.target.value)} />
+    <input
+      className="input"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
+  );
+}
+
+function NumberInput({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (v: number) => void;
+}) {
+  return (
+    <input
+      type="number"
+      min={1}
+      max={5}
+      className="input"
+      value={value}
+      onChange={(e) => onChange(Number(e.target.value))}
+    />
   );
 }

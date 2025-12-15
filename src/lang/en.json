@@ -28,12 +28,13 @@
   "field.available": "Available",
 
   "field.totalCost": "Total cost",
-  "field.neuteringCost": "Neutering",
-  "field.vaccineCost": "Vaccination",
-  "field.dewormingCost": "De-worming",
+  "field.neuteringCost": "Neutering cost",
+  "field.vaccineCost": "Vaccination cost",
+  "field.dewormingCost": "De-worming cost",
   "field.microchipCost": "Microchip cost",
 
   "field.description": "Description",
+  "field.photo": "Photo URL",
 
   "value.yes": "Yes",
   "value.no": "No",

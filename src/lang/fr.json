@@ -28,12 +28,13 @@
   "field.available": "Disponible",
 
   "field.totalCost": "Coût total",
-  "field.neuteringCost": "Stérilisation",
-  "field.vaccineCost": "Vaccin",
-  "field.dewormingCost": "Vermifuge",
+  "field.neuteringCost": "Coût Stérilisation",
+  "field.vaccineCost": "Coût Vaccin",
+  "field.dewormingCost": "Coût Vermifuge",
   "field.microchipCost": "Coût micropuce",
 
   "field.description": "Description",
+  "field.photo": "URL de la photo",
 
   "value.yes": "Oui",
   "value.no": "Non",
