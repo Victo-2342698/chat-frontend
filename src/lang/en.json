@@ -13,7 +13,9 @@
   "field.fileNumber": "File number",
   "field.birthDate": "Date of birth",
   "field.adoptionDate": "Adoption date",
-
+  "common.choose": "Choose",
+  "common.female": "Female",
+  "common.male": "Male",
   "field.energy": "Energy level",
   "field.humanSocial": "Human sociability",
   "field.childCompat": "Child compatibility",

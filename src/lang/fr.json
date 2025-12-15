@@ -13,6 +13,9 @@
   "field.fileNumber": "Numéro dossier",
   "field.birthDate": "Date de naissance",
   "field.adoptionDate": "Date mise en adoption",
+  "common.choose": "Choisir",
+  "common.female": "Femelle",
+  "common.male": "Mâle",
 
   "field.energy": "Énergie",
   "field.humanSocial": "Sociabilité humain",

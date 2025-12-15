@@ -140,14 +140,6 @@ export default function ChatEdit() {
     e.preventDefault();
     setErrorMsg('');
 
-    /*Champs obligatoires */
-    for (const [field, value] of Object.entries(formData)) {
-      if (value === '' || value === null || value === undefined) {
-        setErrorMsg(`Champ obligatoire manquant : ${field}`);
-        return;
-      }
-    }
-
     /* Date naissance < aujourd’hui */
     const today = new Date().toISOString().split('T')[0];
     if (formData.dateNaissance >= today) {
@@ -189,13 +181,23 @@ export default function ChatEdit() {
 
     const body = {
       ...formData,
+
       poids: poidsKg,
       numeroDossier: Number(formData.numeroDossier),
+
       coutTotal: nettoyerNombre(formData.coutTotal),
       coutSterilisation: nettoyerNombre(formData.coutSterilisation),
       coutVaccin: nettoyerNombre(formData.coutVaccin),
       coutVermifuge: nettoyerNombre(formData.coutVermifuge),
       coutMicropuce: nettoyerNombre(formData.coutMicropuce),
+
+      micropuce: formData.micropuce,
+      sterilise: formData.sterilise,
+      degraffe: formData.degraffe,
+      vermifuge: formData.vermifuge,
+      vaccinsBase: formData.vaccinsBase,
+      disponible: formData.disponible,
+
       photos: [formData.photoUrl],
     };
 
