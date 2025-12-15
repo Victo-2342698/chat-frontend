@@ -1,2 +1,2 @@
 export const API_BASE_URL =
-  'https://refugedechat-csgthcd9dqc8cmdr.canadacentral-01.azurewebsites.net/api';
+  'refugedechat2-cxd9cgfebzgch0gt.canadacentral-01.azurewebsites.net/api';
