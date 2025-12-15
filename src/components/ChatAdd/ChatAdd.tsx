@@ -20,6 +20,13 @@ type FormData = {
   compatChiens: number;
   compatChats: number;
 
+  micropuce: boolean;
+  sterilise: boolean;
+  degraffe: boolean;
+  vermifuge: boolean;
+  vaccinsBase: boolean;
+  disponible: boolean;
+
   coutTotal: string;
   coutSterilisation: string;
   coutVaccin: string;
@@ -56,6 +63,13 @@ export default function ChatAdd() {
     compatEnfants: 1,
     compatChiens: 1,
     compatChats: 1,
+
+    micropuce: false,
+    sterilise: false,
+    degraffe: false,
+    vermifuge: false,
+    vaccinsBase: false,
+    disponible: true,
 
     coutTotal: '',
     coutSterilisation: '',
@@ -268,6 +282,61 @@ export default function ChatAdd() {
             value={formData.photoUrl}
             onChange={(v) => update('photoUrl', v)}
           />
+        </Field>
+        <Field label="Options de santé">
+          <label className="flex gap-2">
+            <input
+              type="checkbox"
+              checked={formData.micropuce}
+              onChange={(e) => update('micropuce', e.target.checked)}
+            />
+            Micropucé
+          </label>
+
+          <label className="flex gap-2">
+            <input
+              type="checkbox"
+              checked={formData.sterilise}
+              onChange={(e) => update('sterilise', e.target.checked)}
+            />
+            Stérilisé
+          </label>
+
+          <label className="flex gap-2">
+            <input
+              type="checkbox"
+              checked={formData.degraffe}
+              onChange={(e) => update('degraffe', e.target.checked)}
+            />
+            Dégriffé
+          </label>
+
+          <label className="flex gap-2">
+            <input
+              type="checkbox"
+              checked={formData.vermifuge}
+              onChange={(e) => update('vermifuge', e.target.checked)}
+            />
+            Vermifugé
+          </label>
+
+          <label className="flex gap-2">
+            <input
+              type="checkbox"
+              checked={formData.vaccinsBase}
+              onChange={(e) => update('vaccinsBase', e.target.checked)}
+            />
+            Vaccins de base
+          </label>
+
+          <label className="flex gap-2">
+            <input
+              type="checkbox"
+              checked={formData.disponible}
+              onChange={(e) => update('disponible', e.target.checked)}
+            />
+            Disponible à l’adoption
+          </label>
         </Field>
 
         <Field label={messages['field.totalCost']}>
