@@ -27,9 +27,7 @@ L’application est responsive (mobile first), internationalisée (Français / A
 
 ## Application publiée
 
-https://refugedechat-xxxxxxxx.azurestaticapps.net
-
----
+https://gentle-plant-0c9994e0f.3.azurestaticapps.net
 
 ## Authentification
 
@@ -37,7 +35,7 @@ L’accès aux fonctionnalités de gestion des chats nécessite une authentifica
 
 ### Identifiants de test
 
-Courriel : test@example.com
+Courriel : admin@example.com
 Mot de passe : 1234
 
 Un token JWT est généré par l’API et stocké dans le navigateur.
