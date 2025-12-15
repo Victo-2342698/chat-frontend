@@ -5,8 +5,6 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { ChatContext } from '../../contexts/ChatContext';
 import { API_BASE_URL } from '../../constants';
 
-/* ================= TYPES ================= */
-
 type FormData = {
   nom: string;
   race: string;
@@ -39,12 +37,8 @@ type FormData = {
   photoUrl: string;
 };
 
-/* ================= UTILS ================= */
-
 const nettoyerNombre = (v: string) =>
   Number(v.replace(',', '.').replace(/[^0-9.]/g, ''));
-
-/* ================= COMPONENT ================= */
 
 export default function ChatEdit() {
   const { chatid } = useParams();
@@ -87,8 +81,6 @@ export default function ChatEdit() {
 
     photoUrl: '',
   });
-
-  /* ================= LOAD CHAT ================= */
 
   useEffect(() => {
     async function load() {
@@ -148,35 +140,33 @@ export default function ChatEdit() {
     e.preventDefault();
     setErrorMsg('');
 
-    /* 🔴 Champs obligatoires */
+    /*Champs obligatoires */
     for (const [field, value] of Object.entries(formData)) {
       if (value === '' || value === null || value === undefined) {
-        setErrorMsg(`❌ Champ obligatoire manquant : ${field}`);
+        setErrorMsg(`Champ obligatoire manquant : ${field}`);
         return;
       }
     }
 
-    /* 🔴 Date naissance < aujourd’hui */
+    /* Date naissance < aujourd’hui */
     const today = new Date().toISOString().split('T')[0];
     if (formData.dateNaissance >= today) {
-      setErrorMsg(
-        '❌ La date de naissance doit être antérieure à aujourd’hui.',
-      );
+      setErrorMsg('La date de naissance doit être antérieure à aujourd’hui.');
       return;
     }
 
-    /* 🔴 Poids > 500 g (0.5 kg) */
+    /* Poids > 500 g (0.5 kg) */
     const poidsKg = nettoyerNombre(formData.poids);
     if (isNaN(poidsKg)) {
-      setErrorMsg('❌ Le poids doit être un nombre valide.');
+      setErrorMsg('Le poids doit être un nombre valide.');
       return;
     }
     if (poidsKg <= 0.5) {
-      setErrorMsg('❌ Le poids doit être supérieur à 500 g (0.5 kg).');
+      setErrorMsg('Le poids doit être supérieur à 500 g (0.5 kg).');
       return;
     }
 
-    /* 🔴 Coûts STRICTEMENT > 0 */
+    /* Couts STRICTEMENT > 0 */
     const couts: [string, string][] = [
       ['Coût total', formData.coutTotal],
       ['Coût stérilisation', formData.coutSterilisation],
@@ -188,11 +178,11 @@ export default function ChatEdit() {
     for (const [label, value] of couts) {
       const n = nettoyerNombre(value);
       if (isNaN(n)) {
-        setErrorMsg(`❌ ${label} doit être un nombre valide.`);
+        setErrorMsg(`${label} doit être un nombre valide.`);
         return;
       }
       if (n <= 0) {
-        setErrorMsg(`❌ ${label} doit être strictement supérieur à 0 $.`);
+        setErrorMsg(`${label} doit être strictement supérieur à 0 $.`);
         return;
       }
     }
@@ -219,7 +209,7 @@ export default function ChatEdit() {
     });
 
     if (!res.ok) {
-      setErrorMsg('❌ Erreur lors de la sauvegarde.');
+      setErrorMsg('Erreur lors de la sauvegarde.');
       return;
     }
 
@@ -228,8 +218,6 @@ export default function ChatEdit() {
   }
 
   if (loading) return <p className="text-center mt-10">Chargement…</p>;
-
-  /* ================= UI ================= */
 
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-xl p-8 mt-10">
@@ -327,8 +315,6 @@ export default function ChatEdit() {
     </div>
   );
 }
-
-/* ================= INPUTS ================= */
 
 function Input({
   label,

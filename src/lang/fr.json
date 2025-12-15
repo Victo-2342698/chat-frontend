@@ -1,7 +1,46 @@
 {
-  "menu.home": "Accueil",
-  "menu.login": "Connexion",
-  "home.title": "Page d’accueil – Liste des chats",
+  "menu.home": "Chats disponibles",
+  "menu.add": "Ajouter un chat",
+  "menu.logout": "Se déconnecter",
+
   "login.title": "Connexion",
-  "login.button": "Se connecter"
+  "login.button": "Se connecter",
+
+  "field.name": "Nom",
+  "field.race": "Race",
+  "field.sex": "Sexe",
+  "field.weight": "Poids (kg)",
+  "field.fileNumber": "Numéro dossier",
+  "field.birthDate": "Date de naissance",
+  "field.adoptionDate": "Date mise en adoption",
+
+  "field.energy": "Énergie",
+  "field.humanSocial": "Sociabilité humain",
+  "field.childCompat": "Compatibilité enfants",
+  "field.dogCompat": "Compatibilité chiens",
+  "field.catCompat": "Compatibilité chats",
+
+  "field.microchip": "Micropuce",
+  "field.neutered": "Stérilisé",
+  "field.declawed": "Dégriffé",
+  "field.dewormed": "Vermifuge",
+  "field.vaccinated": "Vaccins de base",
+  "field.available": "Disponible",
+
+  "field.totalCost": "Coût total",
+  "field.neuteringCost": "Stérilisation",
+  "field.vaccineCost": "Vaccin",
+  "field.dewormingCost": "Vermifuge",
+  "field.microchipCost": "Coût micropuce",
+
+  "field.description": "Description",
+
+  "value.yes": "Oui",
+  "value.no": "Non",
+
+  "button.add": "Ajouter",
+  "button.edit": "Modifier",
+  "button.delete": "Supprimer",
+  "button.save": "Sauvegarder",
+  "button.cancel": "Annuler"
 }

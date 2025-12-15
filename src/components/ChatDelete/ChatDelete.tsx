@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { ChatContext } from '../../contexts/ChatContext';
@@ -15,7 +14,7 @@ export default function ChatDelete({ chatid }: { chatid?: string }) {
 
   async function deleteChat() {
     if (!chatid) {
-      alert('❌ Aucun chatid reçu');
+      alert('Aucun chat id reçu');
       return;
     }
 
@@ -30,14 +29,14 @@ export default function ChatDelete({ chatid }: { chatid?: string }) {
       });
 
       if (!res.ok) {
-        alert('❌ Impossible de supprimer le chat.');
+        alert('Impossible de supprimer le chat.');
         return;
       }
 
       refreshChats();
       navigate('/');
     } catch {
-      alert('❌ Erreur de connexion au serveur.');
+      alert('Erreur de connexion au serveur.');
     } finally {
       setLoading(false);
     }

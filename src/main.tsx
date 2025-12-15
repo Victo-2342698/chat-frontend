@@ -3,15 +3,18 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './components/App';
 
-import AuthProvider from './contexts/AuthContext'; // ✔ correct
-import ChatProvider from './contexts/ChatContext'; // ✔ nouveau provider chats
+import AuthProvider from './contexts/AuthContext';
+import ChatProvider from './contexts/ChatContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AuthProvider>
-      <ChatProvider>
-        <App />
-      </ChatProvider>
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <ChatProvider>
+          <App />
+        </ChatProvider>
+      </AuthProvider>
+    </LanguageProvider>
   </StrictMode>,
 );

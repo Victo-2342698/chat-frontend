@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContext';
 import { ChatContext } from '../../contexts/ChatContext';
+import { LanguageContext } from '../../contexts/LanguageContext';
 import { API_BASE_URL } from '../../constants';
-
-/* ================= TYPES ================= */
 
 type FormData = {
   nom: string;
@@ -39,17 +37,14 @@ type FormData = {
   photoUrl: string;
 };
 
-/* ================= HELPERS ================= */
-
 const cleanNumber = (v: string) =>
   Number(v.replace(',', '.').replace(/[^0-9.]/g, ''));
-
-/* ================= COMPONENT ================= */
 
 export default function ChatAdd() {
   const navigate = useNavigate();
   const { token, isLoggedIn } = useContext(AuthContext);
   const { chats, refreshChats } = useContext(ChatContext);
+  const { messages } = useContext(LanguageContext);
 
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(true);
@@ -88,8 +83,6 @@ export default function ChatAdd() {
 
   if (!isLoggedIn) navigate('/login');
 
-  /* ================= INIT NUMERO DOSSIER ================= */
-
   useEffect(() => {
     refreshChats();
 
@@ -104,8 +97,6 @@ export default function ChatAdd() {
   function update<K extends keyof FormData>(k: K, v: FormData[K]) {
     setFormData((p) => ({ ...p, [k]: v }));
   }
-
-  /* ================= SUBMIT ================= */
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -129,25 +120,29 @@ export default function ChatAdd() {
 
     for (const f of required) {
       if (!formData[f]) {
-        setErrorMsg(`❌ Champ obligatoire manquant : ${f}`);
+        setErrorMsg(
+          `${messages['error.required'] ?? 'Required field'} : ${
+            messages[`field.${f}`] ?? f
+          }`,
+        );
         return;
       }
     }
 
     if (chats.some((c) => c.photos?.includes(formData.photoUrl))) {
-      setErrorMsg('❌ Cette photo est déjà utilisée.');
+      setErrorMsg(messages['error.photoUnique'] ?? 'Photo already used');
       return;
     }
 
     const today = new Date().toISOString().split('T')[0];
     if (formData.dateNaissance >= today) {
-      setErrorMsg('❌ Date de naissance invalide.');
+      setErrorMsg(messages['error.birthdate'] ?? 'Invalid birth date');
       return;
     }
 
     const poidsKg = cleanNumber(formData.poids);
     if (isNaN(poidsKg) || poidsKg <= 0.5) {
-      setErrorMsg('❌ Le poids doit être supérieur à 500 g.');
+      setErrorMsg(messages['error.weight'] ?? 'Invalid weight');
       return;
     }
 
@@ -160,7 +155,7 @@ export default function ChatAdd() {
     ];
 
     if (couts.some((c) => cleanNumber(c) <= 0)) {
-      setErrorMsg('❌ Tous les coûts doivent être supérieurs à 0.');
+      setErrorMsg(messages['error.cost'] ?? 'Invalid cost');
       return;
     }
 
@@ -185,7 +180,7 @@ export default function ChatAdd() {
     });
 
     if (!res.ok) {
-      setErrorMsg('❌ Erreur lors de l’ajout.');
+      setErrorMsg(messages['error.add'] ?? 'Add error');
       return;
     }
 
@@ -193,13 +188,13 @@ export default function ChatAdd() {
     navigate('/');
   }
 
-  if (loading) return <p className="text-center mt-10">Chargement…</p>;
-
-  /* ================= UI ================= */
+  if (loading) return <p className="text-center mt-10">Loading…</p>;
 
   return (
     <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl p-8 mt-10">
-      <h2 className="text-3xl font-bold text-center mb-6">Ajouter un chat</h2>
+      <h2 className="text-3xl font-bold text-center mb-6">
+        {messages['menu.add']}
+      </h2>
 
       {errorMsg && (
         <div className="bg-red-100 text-red-700 p-3 mb-6 rounded text-center">
@@ -208,32 +203,33 @@ export default function ChatAdd() {
       )}
 
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
-        {/* ===== Infos générales ===== */}
-        <L label="Nom">
+        <L label={messages['field.name']}>
           <I v={formData.nom} f="nom" u={update} />
         </L>
 
-        <L label="Race">
+        <L label={messages['field.race']}>
           <I v={formData.race} f="race" u={update} />
         </L>
 
-        <L label="Sexe">
+        <L label={messages['field.sex']}>
           <select
             className="input"
             value={formData.sexe}
             onChange={(e) => update('sexe', e.target.value)}
           >
-            <option value="">Choisir</option>
-            <option value="Femelle">Femelle</option>
-            <option value="Mâle">Mâle</option>
+            <option value="">{messages['common.choose'] ?? 'Choose'}</option>
+            <option value="Femelle">
+              {messages['common.female'] ?? 'Female'}
+            </option>
+            <option value="Mâle">{messages['common.male'] ?? 'Male'}</option>
           </select>
         </L>
 
-        <L label="Poids (kg)">
+        <L label={messages['field.weight']}>
           <I v={formData.poids} f="poids" u={update} />
         </L>
 
-        <L label="Numéro dossier">
+        <L label={messages['field.fileNumber']}>
           <input
             className="input bg-gray-100"
             value={formData.numeroDossier}
@@ -241,7 +237,7 @@ export default function ChatAdd() {
           />
         </L>
 
-        <L label="Date naissance">
+        <L label={messages['field.birthDate']}>
           <input
             type="date"
             className="input"
@@ -250,7 +246,7 @@ export default function ChatAdd() {
           />
         </L>
 
-        <L label="Date mise en adoption">
+        <L label={messages['field.adoptionDate']}>
           <input
             type="date"
             className="input"
@@ -259,66 +255,7 @@ export default function ChatAdd() {
           />
         </L>
 
-        {/* ===== Notes / compatibilités ===== */}
-        <L label="Énergie (1 à 5)">
-          <input
-            type="number"
-            min={1}
-            max={5}
-            className="input text-center"
-            value={formData.tauxEnergie}
-            onChange={(e) => update('tauxEnergie', Number(e.target.value))}
-          />
-        </L>
-
-        <L label="Sociabilité humain (1 à 5)">
-          <input
-            type="number"
-            min={1}
-            max={5}
-            className="input text-center"
-            value={formData.sociabiliteHumain}
-            onChange={(e) =>
-              update('sociabiliteHumain', Number(e.target.value))
-            }
-          />
-        </L>
-
-        <L label="Compatibilité enfants (1 à 5)">
-          <input
-            type="number"
-            min={1}
-            max={5}
-            className="input text-center"
-            value={formData.compatEnfants}
-            onChange={(e) => update('compatEnfants', Number(e.target.value))}
-          />
-        </L>
-
-        <L label="Compatibilité chiens (1 à 5)">
-          <input
-            type="number"
-            min={1}
-            max={5}
-            className="input text-center"
-            value={formData.compatChiens}
-            onChange={(e) => update('compatChiens', Number(e.target.value))}
-          />
-        </L>
-
-        <L label="Compatibilité chats (1 à 5)">
-          <input
-            type="number"
-            min={1}
-            max={5}
-            className="input text-center"
-            value={formData.compatChats}
-            onChange={(e) => update('compatChats', Number(e.target.value))}
-          />
-        </L>
-
-        {/* ===== Description & photo ===== */}
-        <L label="Description">
+        <L label={messages['field.description']}>
           <textarea
             className="input min-h-[90px]"
             value={formData.description}
@@ -330,113 +267,36 @@ export default function ChatAdd() {
           <I v={formData.photoUrl} f="photoUrl" u={update} />
         </L>
 
-        {/* ===== Santé / état ===== */}
-        <L label="Micropuce">
-          <label className="flex items-center gap-3 h-10">
-            <input
-              type="checkbox"
-              className="w-5 h-5 accent-blue-600"
-              checked={formData.micropuce}
-              onChange={(e) => update('micropuce', e.target.checked)}
-            />
-            <span>Oui</span>
-          </label>
-        </L>
-
-        <L label="Stérilisé">
-          <label className="flex items-center gap-3 h-10">
-            <input
-              type="checkbox"
-              className="w-5 h-5 accent-blue-600"
-              checked={formData.sterilise}
-              onChange={(e) => update('sterilise', e.target.checked)}
-            />
-            <span>Oui</span>
-          </label>
-        </L>
-
-        <L label="Dégriffé">
-          <label className="flex items-center gap-3 h-10">
-            <input
-              type="checkbox"
-              className="w-5 h-5 accent-blue-600"
-              checked={formData.degraffe}
-              onChange={(e) => update('degraffe', e.target.checked)}
-            />
-            <span>Oui</span>
-          </label>
-        </L>
-
-        <L label="Vermifugé">
-          <label className="flex items-center gap-3 h-10">
-            <input
-              type="checkbox"
-              className="w-5 h-5 accent-blue-600"
-              checked={formData.vermifuge}
-              onChange={(e) => update('vermifuge', e.target.checked)}
-            />
-            <span>Oui</span>
-          </label>
-        </L>
-
-        <L label="Vaccins de base">
-          <label className="flex items-center gap-3 h-10">
-            <input
-              type="checkbox"
-              className="w-5 h-5 accent-blue-600"
-              checked={formData.vaccinsBase}
-              onChange={(e) => update('vaccinsBase', e.target.checked)}
-            />
-            <span>Oui</span>
-          </label>
-        </L>
-
-        <L label="Disponible">
-          <label className="flex items-center gap-3 h-10">
-            <input
-              type="checkbox"
-              className="w-5 h-5 accent-blue-600"
-              checked={formData.disponible}
-              onChange={(e) => update('disponible', e.target.checked)}
-            />
-            <span>Oui</span>
-          </label>
-        </L>
-
-        {/* ===== Coûts ===== */}
-        <L label="Coût total ($)">
+        <L label={messages['field.totalCost']}>
           <I v={formData.coutTotal} f="coutTotal" u={update} />
         </L>
 
-        <L label="Coût stérilisation ($)">
+        <L label={messages['field.neuteringCost']}>
           <I v={formData.coutSterilisation} f="coutSterilisation" u={update} />
         </L>
 
-        <L label="Coût vaccin ($)">
+        <L label={messages['field.vaccineCost']}>
           <I v={formData.coutVaccin} f="coutVaccin" u={update} />
         </L>
 
-        <L label="Coût vermifuge ($)">
+        <L label={messages['field.dewormingCost']}>
           <I v={formData.coutVermifuge} f="coutVermifuge" u={update} />
         </L>
 
-        <L label="Coût micropuce ($)">
+        <L label={messages['field.microchipCost']}>
           <I v={formData.coutMicropuce} f="coutMicropuce" u={update} />
         </L>
 
-        {/* ===== Submit ===== */}
         <button
           type="submit"
           className="col-span-2 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg text-lg font-semibold transition"
         >
-          Ajouter
+          {messages['button.add']}
         </button>
       </form>
     </div>
   );
 }
-
-/* ================= SMALL COMPONENTS ================= */
 
 function L({ label, children }: any) {
   return (

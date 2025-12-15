@@ -1,7 +1,46 @@
 {
-  "menu.home": "Home",
-  "menu.login": "Login",
-  "home.title": "Home – List of cats",
+  "menu.home": "Available cats",
+  "menu.add": "Add a cat",
+  "menu.logout": "Log out",
+
   "login.title": "Login",
-  "login.button": "Sign in"
+  "login.button": "Sign in",
+
+  "field.name": "Name",
+  "field.race": "Breed",
+  "field.sex": "Sex",
+  "field.weight": "Weight (kg)",
+  "field.fileNumber": "File number",
+  "field.birthDate": "Date of birth",
+  "field.adoptionDate": "Adoption date",
+
+  "field.energy": "Energy level",
+  "field.humanSocial": "Human sociability",
+  "field.childCompat": "Child compatibility",
+  "field.dogCompat": "Dog compatibility",
+  "field.catCompat": "Cat compatibility",
+
+  "field.microchip": "Microchipped",
+  "field.neutered": "Neutered",
+  "field.declawed": "Declawed",
+  "field.dewormed": "De-wormed",
+  "field.vaccinated": "Core vaccinations",
+  "field.available": "Available",
+
+  "field.totalCost": "Total cost",
+  "field.neuteringCost": "Neutering",
+  "field.vaccineCost": "Vaccination",
+  "field.dewormingCost": "De-worming",
+  "field.microchipCost": "Microchip cost",
+
+  "field.description": "Description",
+
+  "value.yes": "Yes",
+  "value.no": "No",
+
+  "button.add": "Add",
+  "button.edit": "Edit",
+  "button.delete": "Delete",
+  "button.save": "Save",
+  "button.cancel": "Cancel"
 }

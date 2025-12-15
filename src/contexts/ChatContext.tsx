@@ -6,7 +6,6 @@ import { AuthContext } from './AuthContext';
 export interface IChat {
   _id: string;
 
-  // Infos de base
   nom: string;
   race: string;
   sexe?: string;
@@ -18,14 +17,12 @@ export interface IChat {
 
   description: string;
 
-  // Notes / compatibilités
   tauxEnergie: number;
   sociabiliteHumain: number;
   compatEnfants: number;
   compatChiens: number;
   compatChats: number;
 
-  // États
   micropuce: boolean;
   sterilise: boolean;
   degraffe?: boolean;
@@ -33,14 +30,12 @@ export interface IChat {
   vaccinsBase: boolean;
   disponible?: boolean;
 
-  // Coûts
   coutTotal?: number;
   coutSterilisation?: number;
   coutVaccin?: number;
   coutVermifuge?: number;
   coutMicropuce?: number;
 
-  // Médias
   photos: string[];
 }
 
@@ -64,19 +59,31 @@ export default function ChatProvider({ children }: any) {
   const [chats, setChats] = useState<IChat[]>([]);
   const { token } = useContext(AuthContext);
 
-  // 🔵 GET ALL CHATS
-  async function refreshChats() {
+  // GET ALL CHATS
+  async function refreshChats(filters?: {
+    race?: string;
+    tauxEnergie?: number;
+  }) {
     try {
-      const res = await axios.get(`${API_BASE_URL}/chats/all`);
-      console.log('API RESPONSE:', res.data);
+      const params = new URLSearchParams();
 
-      setChats(res.data.data ?? res.data.chats ?? []);
+      if (filters?.race) params.append('race', filters.race);
+      if (filters?.tauxEnergie)
+        params.append('tauxEnergie', String(filters.tauxEnergie));
+
+      const url =
+        params.toString().length > 0
+          ? `${API_BASE_URL}/chats/all?${params.toString()}`
+          : `${API_BASE_URL}/chats/all`;
+
+      const res = await axios.get(url);
+      setChats(res.data.data ?? []);
     } catch (err) {
       console.error('Erreur refreshChats :', err);
     }
   }
 
-  // 🔵 GET ONE CHAT
+  // GET ONE CHAT
   async function getChat(id: string) {
     try {
       const res = await axios.get(`${API_BASE_URL}/chats/${id}`);
@@ -86,7 +93,7 @@ export default function ChatProvider({ children }: any) {
     }
   }
 
-  // 🔴 UPDATE CHAT (PUT)
+  // UPDATE CHAT (PUT)
   async function updateChat(id: string, data: any) {
     try {
       await axios.put(`${API_BASE_URL}/chats/${id}`, data, {
@@ -103,7 +110,7 @@ export default function ChatProvider({ children }: any) {
     }
   }
 
-  // 🔴 DELETE CHAT
+  // DELETE CHAT
   async function deleteChat(id: string) {
     try {
       await axios.delete(`${API_BASE_URL}/chats/${id}`, {

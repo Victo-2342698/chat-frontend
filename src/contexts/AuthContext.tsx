@@ -26,7 +26,6 @@ export default function AuthProvider({ children }: any) {
   const [token, setToken] = useState('');
   const [pageRedirectAfterLogin, setPageRedirectAfterLogin] = useState('/');
 
-  // ------------ LOGIN ------------
   async function login(email: string, password: string) {
     try {
       const res = await api.post('/auth/generatetoken', { email, password });
@@ -45,7 +44,6 @@ export default function AuthProvider({ children }: any) {
     }
   }
 
-  // ------------ COOKIES ------------
   function saveToken(token: string) {
     document.cookie = `token=${token}; path=/; max-age=3600`;
   }
@@ -63,7 +61,6 @@ export default function AuthProvider({ children }: any) {
     }
   }
 
-  // ------------ LOGOUT ------------
   function logout() {
     setIsLoggedIn(false);
     setToken('');
