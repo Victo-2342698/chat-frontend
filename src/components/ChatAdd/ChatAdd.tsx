@@ -85,11 +85,9 @@ export default function ChatAdd() {
 
   useEffect(() => {
     refreshChats();
-
     const max = chats.length
       ? Math.max(...chats.map((c) => c.numeroDossier))
       : 1000;
-
     setFormData((p) => ({ ...p, numeroDossier: max + 1 }));
     setLoading(false);
   }, []);
@@ -121,7 +119,7 @@ export default function ChatAdd() {
     for (const f of required) {
       if (!formData[f]) {
         setErrorMsg(
-          `${messages['error.required'] ?? 'Required field'} : ${
+          `${messages['error.required'] ?? 'Champ requis'} : ${
             messages[`field.${f}`] ?? f
           }`,
         );
@@ -129,33 +127,9 @@ export default function ChatAdd() {
       }
     }
 
-    if (chats.some((c) => c.photos?.includes(formData.photoUrl))) {
-      setErrorMsg(messages['error.photoUnique'] ?? 'Photo already used');
-      return;
-    }
-
-    const today = new Date().toISOString().split('T')[0];
-    if (formData.dateNaissance >= today) {
-      setErrorMsg(messages['error.birthdate'] ?? 'Invalid birth date');
-      return;
-    }
-
     const poidsKg = cleanNumber(formData.poids);
     if (isNaN(poidsKg) || poidsKg <= 0.5) {
-      setErrorMsg(messages['error.weight'] ?? 'Invalid weight');
-      return;
-    }
-
-    const couts = [
-      formData.coutTotal,
-      formData.coutSterilisation,
-      formData.coutVaccin,
-      formData.coutVermifuge,
-      formData.coutMicropuce,
-    ];
-
-    if (couts.some((c) => cleanNumber(c) <= 0)) {
-      setErrorMsg(messages['error.cost'] ?? 'Invalid cost');
+      setErrorMsg(messages['error.weight'] ?? 'Poids invalide');
       return;
     }
 
@@ -180,7 +154,7 @@ export default function ChatAdd() {
     });
 
     if (!res.ok) {
-      setErrorMsg(messages['error.add'] ?? 'Add error');
+      setErrorMsg(messages['error.add'] ?? 'Erreur lors de l’ajout');
       return;
     }
 
@@ -217,11 +191,11 @@ export default function ChatAdd() {
             value={formData.sexe}
             onChange={(e) => update('sexe', e.target.value)}
           >
-            <option value="">{messages['common.choose'] ?? 'Choose'}</option>
+            <option value="">{messages['common.choose'] ?? 'Choisir'}</option>
             <option value="Femelle">
-              {messages['common.female'] ?? 'Female'}
+              {messages['common.female'] ?? 'Femelle'}
             </option>
-            <option value="Mâle">{messages['common.male'] ?? 'Male'}</option>
+            <option value="Mâle">{messages['common.male'] ?? 'Mâle'}</option>
           </select>
         </L>
 
@@ -252,6 +226,63 @@ export default function ChatAdd() {
             className="input"
             value={formData.dateMiseAdoption}
             onChange={(e) => update('dateMiseAdoption', e.target.value)}
+          />
+        </L>
+
+        <L label={`${messages['field.energy']} (1–5)`}>
+          <input
+            type="number"
+            min={1}
+            max={5}
+            className="input"
+            value={formData.tauxEnergie}
+            onChange={(e) => update('tauxEnergie', Number(e.target.value))}
+          />
+        </L>
+
+        <L label={`${messages['field.humanSocial']} (1–5)`}>
+          <input
+            type="number"
+            min={1}
+            max={5}
+            className="input"
+            value={formData.sociabiliteHumain}
+            onChange={(e) =>
+              update('sociabiliteHumain', Number(e.target.value))
+            }
+          />
+        </L>
+
+        <L label={`${messages['field.childCompat']} (1–5)`}>
+          <input
+            type="number"
+            min={1}
+            max={5}
+            className="input"
+            value={formData.compatEnfants}
+            onChange={(e) => update('compatEnfants', Number(e.target.value))}
+          />
+        </L>
+
+        <L label={`${messages['field.dogCompat']} (1–5)`}>
+          <input
+            type="number"
+            min={1}
+            max={5}
+            className="input"
+            value={formData.compatChiens}
+            onChange={(e) => update('compatChiens', Number(e.target.value))}
+          />
+        </L>
+
+        <L label={`${messages['field.catCompat']} (1–5)`}>
+          <input
+            type="number"
+            min={1}
+            max={5}
+            className="input"
+            value={formData.compatChats}
+            onChange={(e) => update('compatChats', Number(e.target.value))}
           />
         </L>
 
@@ -289,7 +320,7 @@ export default function ChatAdd() {
 
         <button
           type="submit"
-          className="col-span-2 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg text-lg font-semibold transition"
+          className="col-span-2 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg text-lg font-semibold"
         >
           {messages['button.add']}
         </button>
